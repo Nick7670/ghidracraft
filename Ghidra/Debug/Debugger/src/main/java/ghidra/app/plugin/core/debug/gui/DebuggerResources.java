@@ -103,7 +103,7 @@ public interface DebuggerResources {
 		ResourceManager.loadImage("images/breakpoints-make-effective.png");
 
 	// TODO: Some overlay to indicate dynamic, or new icon altogether
-	ImageIcon ICON_LISTING = ResourceManager.loadImage("images/Browser.png");
+	ImageIcon ICON_LISTING = ResourceManager.loadImage("images/browser.png");
 	ImageIcon ICON_CONSOLE = ResourceManager.loadImage("images/console.png");
 	ImageIcon ICON_REGISTERS = ResourceManager.loadImage("images/registers.png");
 	ImageIcon ICON_STACK = ResourceManager.loadImage("images/stack.png");
