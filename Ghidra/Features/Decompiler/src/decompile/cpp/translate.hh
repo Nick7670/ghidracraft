@@ -24,6 +24,10 @@
 #include "pcoderaw.hh"
 #include "float.hh"
 
+#ifdef RUST_SUPPORT
+#include "rust/cxx.h"
+#endif
+
 // Some errors specific to the translation unit
 
 /// \brief Exception for encountering unimplemented pcode
@@ -91,6 +95,7 @@ public:
   /// \param isize is the number of input varnodes
   virtual void dump(const Address &addr,OpCode opc,VarnodeData *outvar,VarnodeData *vars,int4 isize)=0;
 
+
   /// Emit pcode directly from an XML tag
   void restoreXmlOp(const Element *el,const AddrSpaceManager *trans);
 
@@ -110,6 +115,10 @@ public:
   /// Emit pcode directly from a packed byte stream
   const uint1 *restorePackedOp(const Address &addr,const uint1 *ptr,const AddrSpaceManager *trans);
 };
+
+#ifdef RUST_SUPPORT
+void dump_rust(PcodeEmit *emit, const Address &addr, OpCode opcode, unique_ptr<VarnodeData> outvar, rust::Slice<const unique_ptr<VarnodeData>> inputs, int4 size);
+#endif
 
 /// \brief Abstract class for emitting disassembly to an application
 ///

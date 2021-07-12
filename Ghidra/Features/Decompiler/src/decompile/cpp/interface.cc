@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 #include "interface.hh"
+#include "error.hh"
+
 #ifdef __REMOTE_SOCKET__
 #include "sys/socket.h"
 #include "sys/un.h"
@@ -596,4 +598,20 @@ void IfcEcho::execute(istream &s)
   while(s.get(c))
     status->fileoptr->put(c);
   *status->fileoptr << endl;
+}
+
+unique_ptr<IfaceStatus> new_iface_status_stub() {
+  return make_unique<IfaceStatusStub>("decomp> ", cout);
+}
+
+void call_cmd(IfaceCommand &cmd, rust::Str s) {
+  auto sstr = string(s);
+  istringstream istr(sstr);
+  try {
+    cmd.execute(istr);
+  } catch (IfaceExecutionError &e) {
+    cout << e.explain << endl;
+  } catch (LowlevelError &e) {
+    cout << e.explain << endl;
+  }
 }

@@ -33,6 +33,11 @@ import db.*;
  * Version 0 adapter for the instruction table.
  */
 class InstDBAdapterV1 extends InstDBAdapter {
+
+	static final Schema INSTRUCTION_SCHEMA_V1 =
+		new Schema(2, "Address", new Field[] { IntField.INSTANCE, ByteField.INSTANCE },
+			new String[] { "Proto ID", "Flags" });
+
 	private static final int VERSION = 1;
 	private Table instTable;
 	private AddressMap addrMap;
@@ -45,7 +50,7 @@ class InstDBAdapterV1 extends InstDBAdapter {
 			VersionException {
 		this.addrMap = addrMap;
 		if (create) {
-			instTable = handle.createTable(INSTRUCTION_TABLE_NAME, INSTRUCTION_SCHEMA);
+			instTable = handle.createTable(INSTRUCTION_TABLE_NAME, INSTRUCTION_SCHEMA_V1);
 		}
 		else {
 			instTable = handle.getTable(INSTRUCTION_TABLE_NAME);
@@ -66,7 +71,7 @@ class InstDBAdapterV1 extends InstDBAdapter {
 	 * @see ghidra.program.database.code.InstDBAdapter#createInstruction(long, int)
 	 */
 	@Override
-	void createInstruction(long addr, int protoID, byte flags) throws IOException {
+	void createInstruction(long addr, int protoID, byte flags, String pcodes) throws IOException {
 		DBRecord record = INSTRUCTION_SCHEMA.createRecord(addr);
 		record.setIntValue(PROTO_ID_COL, protoID);
 		record.setByteValue(FLAGS_COL, flags);
@@ -240,6 +245,11 @@ class InstDBAdapterV1 extends InstDBAdapter {
 	@Override
 	void deleteAll() throws IOException {
 		instTable.deleteAll();
+	}
+
+	@Override
+	void updatePcodes(long addr, String pcodes) throws IOException {
+		throw new UnsupportedOperationException();
 	}
 
 }
